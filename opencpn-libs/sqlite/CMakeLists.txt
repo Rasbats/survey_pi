@@ -10,9 +10,9 @@ add_library(ocpn::sqlite ALIAS _SQLITE)
 
 if(CMAKE_VERSION VERSION_LESS 3.14.0)
   list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR/cmake)
-  find_package(Sqlite)
+  find_package(SQLite)
 else ()
-  find_package(Sqlite3)
+  find_package(SQLite3)
 endif ()
 
 if (NOT SQLITE_FOUND OR APPLE OR WIN32 OR QT_ANDROID)
