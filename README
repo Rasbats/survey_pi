@@ -1,0 +1,34 @@
+VERSION 3 - MAJOR UPDATE - in the master code only
+
+For OpenCPN v5. Uses svg icons.
+
+Changes
+
+Soundings are saved in point format lon-lat. This affects any soundings saved in the sqlite file, with version 2. To fix this, export the survey to a Hydromagic,xyz or csv
+file. Delete the old survey and add a new survey. Import from the saved file into the new survey.
+
+libspatialite-amalgamation cannot be recommended and has been replaced by mod_spatialite. This change was necessary to use the full range of spatialite functions.
+
+The lon-lat point format for the geometry objects can now be used with these functions.
+
+A tidal correction is still in the code but it is not satisfactory. Intention is to replace this with tidal corrections entered in a text file that can be read and used by
+the plugin. This will allow separation between raw data and adjusted data.
+
+Using OpenGL the soundings can be viewed without a sounding mark.
+Now possible to delete a sounding using right-click.
+
+Windows
+The plugin builds standalone without additional files.
+Linux
+Install packages 'libsqlite3','libsqlite3-dev', 'libsqlite3-mod-spatialite' before compiling.
+
+Usage on Windows
+Download the file 'mod_spatialite-4.3.0a-win-x86.7z' from http://www.gaia-gis.it/gaia-sins/windows-bin-x86/. Extract the files. Place all the files EXCEPT 'zlib1.dll' and 'sqlite3.exe' in the main OpenCPN program folder (The folder containing 'opencpn.exe'). Download sqlite3.dll and place in the same folder.
+
+Usage on Linux (Tested on Ubuntu 16.04.03)
+Install the packages 'libsqlite3','libsqlite3-mod-spatialite'.
+
+License
+=======
+The plugin is licensed under the terms of GPL v2 or, at your will, later.
+Some of icons used come from Pastel SVG icon set (http://codefisher.org/pastel-svg/), created by Michael Buckley is licensed under the Creative Commons Attribution-Share Alike 3.0 Unported (http://creativecommons.org/licenses/by-sa/3.0/)
