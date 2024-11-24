@@ -25,8 +25,8 @@ flatpak-steps: &flatpak-steps
 
 jobs:
   build-bullseye:
-    docker:
-      - image: circleci/buildpack-deps:bullseye-scm
+    machine:
+      image: ubuntu-2204:current
     environment:
       - OCPN_TARGET: bullseye
       - TARGET_TUPLE: debian-x86_64;11;x86_64
@@ -34,8 +34,8 @@ jobs:
     <<: *debian-steps
 
   build-bullseye-wx32:
-    docker:
-      - image: circleci/buildpack-deps:bullseye-scm
+    machine:
+      image: ubuntu-2204:current
     environment:
       - OCPN_TARGET: bullseye
       - BUILD_WX32: true
