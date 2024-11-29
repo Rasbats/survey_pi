@@ -28,6 +28,7 @@ Download the file 'mod_spatialite-4.3.0a-win-x86.7z' from http://www.gaia-gis.it
 Usage on Linux (Tested on Ubuntu 16.04.03)
 Install the packages 'libsqlite3','libsqlite3-mod-spatialite'.
 
+
 License
 =======
 The plugin is licensed under the terms of GPL v2 or, at your will, later.
