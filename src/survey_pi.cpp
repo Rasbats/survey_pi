@@ -102,36 +102,35 @@ void appendOSDirSlash(wxString* pString)
  *    SVG icon_name.svg is used, otherwise icon_name.png
  */
 
-static wxBitmap load_plugin(const char* icon_name, const char* api_name)
-{
-    wxBitmap bitmap;
-    wxFileName fn;
-    auto path = GetPluginDataDir(api_name);
-    fn.SetPath(path);
-    fn.AppendDir("data");
-    fn.SetName(icon_name);
-#ifdef SHIPDRIVER_USE_SVG
-    wxLogDebug("Loading SVG icon");
-    fn.SetExt("svg");
-    const static int ICON_SIZE = 48; // FIXME: Needs size from GUI
-    bitmap = GetBitmapFromSVGFile(fn.GetFullPath(), ICON_SIZE, ICON_SIZE);
+static wxBitmap load_plugin(const char* icon_name, const char* api_name) {
+  wxBitmap bitmap;
+  wxFileName fn;
+  auto path = GetPluginDataDir(api_name);
+  fn.SetPath(path);
+  fn.AppendDir("data");
+  fn.SetName(icon_name);
+#ifdef ocpnUSE_SVG
+  wxLogDebug("Loading SVG icon");
+  fn.SetExt("svg");
+  const static int ICON_SIZE = 48;  // FIXME: Needs size from GUI
+  bitmap = GetBitmapFromSVGFile(fn.GetFullPath(), ICON_SIZE, ICON_SIZE);
 #else
-    wxLogDebug("Loading png icon");
-    fn.SetExt("png");
-    path = fn.GetFullPath();
-    if (!wxImage::CanRead(path)) {
-        wxLogDebug("Initiating image handlers.");
-        wxInitAllImageHandlers();
-    }
-    wxImage panelIcon(path);
-    bitmap = wxBitmap(panelIcon);
+  wxLogDebug("Loading png icon");
+  fn.SetExt("png");
+  path = fn.GetFullPath();
+  if (!wxImage::CanRead(path)) {
+    wxLogDebug("Initiating image handlers.");
+    wxInitAllImageHandlers();
+  }
+  wxImage panelIcon(path);
+  bitmap = wxBitmap(panelIcon);
 #endif
-    wxLogDebug("Icon loaded, result: %s", bitmap.IsOk() ? "ok" : "fail");
-    return bitmap;
+  wxLogDebug("Icon loaded, result: %s", bitmap.IsOk() ? "ok" : "fail");
+  return bitmap;
 }
 
 survey_pi::survey_pi(void* ppimgr)
-    : opencpn_plugin_116(ppimgr)
+    : opencpn_plugin_118(ppimgr)
 {
     // Create the PlugIn icons
     initialize_images();
@@ -1927,7 +1926,7 @@ int survey_pi::Init(void)
     //    This PlugIn needs a toolbar icon, so request its insertion
     if (m_bSurveyShowIcon)
 
-#ifdef SURVEY_USE_SVG
+#ifdef ocpnUSE_SVG
         m_leftclick_tool_id = InsertPlugInToolSVG(_T("Survey"), _svg_survey,
             _svg_survey, _svg_survey_toggled, wxITEM_CHECK, _("Survey"), _T(""),
             NULL, SURVEY_TOOL_POSITION, 0, this);
@@ -1982,6 +1981,12 @@ int survey_pi::GetAPIVersionMinor()
     size_t dotpos = v.find('.');
     return atoi(v.substr(dotpos + 1).c_str());
 }
+
+
+int GetPlugInVersionPatch() { return PLUGIN_VERSION_PATCH; }
+int GetPlugInVersionPost() { return PLUGIN_VERSION_TWEAK; }
+const char* GetPlugInVersionPre() { return PKG_PRERELEASE; }
+const char* GetPlugInVersionBuild() { return PKG_BUILD_INFO; }
 
 int survey_pi::GetPlugInVersionMajor() { return PLUGIN_VERSION_MAJOR; }
 

@@ -21,15 +21,11 @@ set(OCPN_RELEASE_REPO
     "opencpn/survey-prod"
     CACHE STRING "Default repository for tagged builds not matching 'beta'")
 
-
-
-option(SURVEY_USE_SVG "Use SVG graphics" ON)
-
 #
 # -------  Plugin setup --------
 #
 set(PKG_NAME survey_pi)
-set(PKG_VERSION 4.1.0)
+set(PKG_VERSION 4.2.0)
 set(PKG_PRERELEASE "") # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME survey) # Dialogs, installer artifacts, ...
@@ -63,7 +59,7 @@ set(SRC
     src/survey_pi.cpp
 )
 
-set(PKG_API_LIB api-16) # A directory in libs/ e. g., api-17 or api-16
+set(PKG_API_LIB api-18) # A directory in libs/ e. g., api-17 or api-16
 
 macro (late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers and
@@ -73,9 +69,6 @@ macro (late_init)
   # Fix OpenGL deprecated warnings in Xcode
   target_compile_definitions(${PACKAGE_NAME} PRIVATE GL_SILENCE_DEPRECATION)
 
-  if (SURVEY_USE_SVG)
-    target_compile_definitions(${PACKAGE_NAME} PUBLIC SURVEY_USE_SVG)
-  endif ()
 endmacro ()
 
 macro (add_plugin_libraries)
@@ -98,5 +91,8 @@ macro (add_plugin_libraries)
 
   add_subdirectory("opencpn-libs/sqlite")
   target_link_libraries(${PACKAGE_NAME} ocpn::sqlite)
+
+  add_subdirectory("opencpn-libs/wxsvg")
+  target_link_libraries(${PACKAGE_NAME} ocpn::wxsvg)
 
 endmacro ()

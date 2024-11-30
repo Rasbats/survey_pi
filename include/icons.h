@@ -16,7 +16,7 @@ extern wxBitmap* _img_survey_paused;
 extern wxBitmap* _img_minus;
 extern wxBitmap* _img_plus;
 
-#ifdef SURVEY_USE_SVG
+#ifdef ocpnUSE_SVG
 extern wxString _svg_survey;
 extern wxString _svg_survey_toggled;
 #endif
