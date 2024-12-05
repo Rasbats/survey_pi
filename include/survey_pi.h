@@ -138,7 +138,7 @@ public:
     void SetSurveyDialogY(int x) { m_survey_dialog_y = x; }
 
     void OnSurveyDialogClose();
-    wxString StandardPath();
+    wxString GetConfigDir();
 
     bool ImportHydromagic(wxString filename);
     bool ImportXYZ(wxString filename);

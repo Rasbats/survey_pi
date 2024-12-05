@@ -1777,7 +1777,7 @@ int survey_pi::Init(void)
 
     //      Establish the location of the database file
     wxString dbpath;
-    dbpath = survey_pi::StandardPath() + _T(DATABASE_NAME);
+    dbpath = survey_pi::GetConfigDir() + _T(DATABASE_NAME);
 
     bool newDB = !wxFileExists(dbpath);
     b_dbUsable = true;
@@ -3235,39 +3235,12 @@ void survey_pi::OnSurveyDialogClose()
     // RequestRefresh(m_parent_window); // refresh main window
 }
 
-wxString survey_pi::StandardPath()
+wxString survey_pi::GetConfigDir()
 {
-    wxStandardPathsBase& std_path = wxStandardPathsBase::Get();
-    wxString s = wxFileName::GetPathSeparator();
-
-#if defined(__WXMSW__)
-    wxString stdPath = std_path.GetConfigDir();
-#elif defined(__WXGTK__) || defined(__WXQT__)
-    wxString stdPath = std_path.GetUserDataDir();
-#elif defined(__WXOSX__)
-    wxString stdPath = (std_path.GetUserConfigDir() + s + "opencpn");
-#endif
-
-    stdPath += s + "plugins";
-    if (!wxDirExists(stdPath))
-        wxMkdir(stdPath);
-
-    stdPath += s + "survey";
-
-#ifdef __WXOSX__
-    // Compatibility with pre-OCPN-4.2; move config dir to
-    // ~/Library/Preferences/opencpn if it exists
-    wxString oldPath
-        = (std_path.GetUserConfigDir() + s + "plugins" + s + "survey");
-    if (wxDirExists(oldPath) && !wxDirExists(stdPath)) {
-        wxLogMessage("survey_pi: moving config dir %s to %s", oldPath, stdPath);
-        wxRenameFile(oldPath, stdPath);
-    }
-#endif
-
-    if (!wxDirExists(stdPath))
-        wxMkdir(stdPath);
-
-    stdPath += s; // is this necessary?
-    return stdPath;
+  wxString cfgPath = *GetpPrivateApplicationDataLocation() +
+                     wxFileName::GetPathSeparator() + "plugins" +
+                     wxFileName::GetPathSeparator() + "survey_pi" +
+                     wxFileName::GetPathSeparator();
+  if (!wxDirExists(cfgPath)) wxMkdir(cfgPath);
+  return cfgPath;
 }
