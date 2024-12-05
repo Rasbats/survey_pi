@@ -57,6 +57,7 @@ set(SRC
     src/surveygui_impl.cpp
     src/SurveyOverlayFactory.cpp
     src/survey_pi.cpp
+    src/plug_utils.cpp
 )
 
 set(PKG_API_LIB api-18) # A directory in libs/ e. g., api-17 or api-16
@@ -72,8 +73,10 @@ macro (late_init)
 endmacro ()
 
 macro (add_plugin_libraries)
-  # Add libraries required by this plugin
-
+# Add libraries required by this plugin
+  add_subdirectory("${CMAKE_SOURCE_DIR}/libs/std_filesystem")
+  target_link_libraries(${PACKAGE_NAME} ocpn::filesystem)
+  
   add_subdirectory("opencpn-libs/plugin_dc")
   target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
 

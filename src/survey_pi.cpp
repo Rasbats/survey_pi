@@ -44,6 +44,8 @@
 #include <wx/buffer.h>
 #include <wx/file.h>
 #include <wx/vector.h>
+#include "plug_utils.h"
+
 
 #include "tinyxml.h"
 
@@ -94,47 +96,23 @@ void appendOSDirSlash(wxString* pString)
 //
 //---------------------------------------------------------------------------------------------------------
 
-/**
- * Load a icon, possibly using SVG
- * Parameters
- *  - api_name: Argument to GetPluginDataDir()
- *  - icon_name: Base name of icon living in data/ directory. When using
- *    SVG icon_name.svg is used, otherwise icon_name.png
- */
-
-static wxBitmap load_plugin(const char* icon_name, const char* api_name) {
-  wxBitmap bitmap;
-  wxFileName fn;
-  auto path = GetPluginDataDir(api_name);
-  fn.SetPath(path);
-  fn.AppendDir("data");
-  fn.SetName(icon_name);
-#ifdef ocpnUSE_SVG
-  wxLogDebug("Loading SVG icon");
-  fn.SetExt("svg");
-  const static int ICON_SIZE = 48;  // FIXME: Needs size from GUI
-  bitmap = GetBitmapFromSVGFile(fn.GetFullPath(), ICON_SIZE, ICON_SIZE);
-#else
-  wxLogDebug("Loading png icon");
-  fn.SetExt("png");
-  path = fn.GetFullPath();
-  if (!wxImage::CanRead(path)) {
-    wxLogDebug("Initiating image handlers.");
-    wxInitAllImageHandlers();
-  }
-  wxImage panelIcon(path);
-  bitmap = wxBitmap(panelIcon);
-#endif
-  wxLogDebug("Icon loaded, result: %s", bitmap.IsOk() ? "ok" : "fail");
-  return bitmap;
-}
-
 survey_pi::survey_pi(void* ppimgr)
     : opencpn_plugin_118(ppimgr)
 {
     // Create the PlugIn icons
     initialize_images();
-    m_panelBitmap = load_plugin("survey_panel_icon", "survey_pi");
+    auto icon_path = GetPluginIcon("survey_panel_icon", PKG_NAME);
+    if (icon_path.type == IconPath::Type::Svg)
+      m_panel_bitmap = LoadSvgIcon(icon_path.path.c_str());
+    else if (icon_path.type == IconPath::Type::Png)
+      m_panel_bitmap = LoadPngIcon(icon_path.path.c_str());
+    else  // icon_path.type == NotFound
+      wxLogWarning("Cannot find icon for basename: %s",
+                   "survey_panel_icon");
+    if (m_panel_bitmap.IsOk())
+      wxLogDebug("surveyPi::, bitmap OK");
+    else
+      wxLogDebug("surveyPi::, bitmap fail");
 
     m_bShowSurvey = false;
 }
@@ -1992,7 +1970,7 @@ int survey_pi::GetPlugInVersionMajor() { return PLUGIN_VERSION_MAJOR; }
 
 int survey_pi::GetPlugInVersionMinor() { return PLUGIN_VERSION_MINOR; }
 
-wxBitmap* survey_pi::GetPlugInBitmap() { return &m_panelBitmap; }
+wxBitmap* survey_pi::GetPlugInBitmap() { return &m_panel_bitmap; }
 
 wxString survey_pi::GetCommonName() { return _("Survey"); }
 

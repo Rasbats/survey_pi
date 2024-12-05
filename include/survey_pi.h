@@ -235,6 +235,8 @@ public:
 
     void dbGetTable(wxString sql, char*** results, int& n_rows, int& n_columns);
     void dbFreeResults(char** results);
+    wxBitmap m_panel_bitmap;
+
 
 private:
     int m_delete_menu_id;
