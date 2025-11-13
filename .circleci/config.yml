@@ -108,8 +108,6 @@ jobs:
       - run: cd build-debian; /bin/bash < upload.sh
       - run: ci/git-push.sh build-debian
 
-
-
   build-flatpak-arm64:
     machine:
       image: ubuntu-2204:current
@@ -140,6 +138,7 @@ jobs:
         default: "fp-arm20-v2"
     <<: *flatpak-steps
 
+
   build-flatpak-x86:
     machine:
       image: ubuntu-2204:current
@@ -167,7 +166,6 @@ jobs:
         # Update the last part, here v2, to invalidate cache
         default: "fp-x86-20-v2"
     <<: *flatpak-steps
-
 
   build-macos-universal:
     macos:
