@@ -108,6 +108,7 @@ survey_pi::survey_pi(void* ppimgr) : opencpn_plugin_118(ppimgr) {
     wxLogDebug("surveyPi::, bitmap fail");
 
   m_bShowSurvey = false;
+  EarlyInit();
 }
 
 void survey_pi::ImportHydromagicTrack(TiXmlElement* track) {
@@ -1632,6 +1633,88 @@ static int callback(void* NotUsed, int argc, char** argv, char** azColName) {
   return 0;
 }
 
+int survey_pi::EarlyInit(void) {
+  m_projection = PROJECTION;
+  m_activesurvey = 0;
+  int db_ver = 1;
+  mPriPosition = 99;
+  mPriDepth = 99;
+  m_lat = 999.0;
+  m_lon = 999.0;
+  mLastX = -1;
+  mLastY = -1;
+  mLastSdgId = -1;
+  mLastSurveyId = -1;
+  m_lastPosReport = wxDateTime::Now();
+  AddLocaleCatalog(_T("opencpn-survey_pi"));
+
+  // spatialite_init(0);
+  err_msg = NULL;
+  wxString sql;
+  m_recording = false;
+  m_survey_trace = false;
+  // Set some default private member parameters
+  m_survey_dialog_x = 0;
+  m_survey_dialog_y = 0;
+
+  m_trimcount = 0;
+  m_latprev = 0;
+  m_lonprev = 0;
+
+  g_pFontTitle = new wxFont(10, wxFONTFAMILY_SWISS, wxFONTSTYLE_ITALIC,
+                            wxFONTWEIGHT_NORMAL);
+  g_pFontData = new wxFont(14, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
+                           wxFONTWEIGHT_NORMAL);
+  g_pFontLabel = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
+                            wxFONTWEIGHT_NORMAL);
+  g_pFontSmall = new wxFont(8, wxFONTFAMILY_SWISS, wxFONTSTYLE_NORMAL,
+                            wxFONTWEIGHT_NORMAL);
+
+  ::wxDisplaySize(&m_display_width, &m_display_height);
+
+  //    Get a pointer to the opencpn display canvas, to use as a parent for
+  //    the POI Manager dialog
+  m_parent_window = GetOCPNCanvasWindow();
+
+  //    Get a pointer to the opencpn configuration object
+  m_pconfig = GetOCPNConfigObject();
+
+  //    And load the configuration items
+  LoadConfig();
+
+  //      Establish the location of the database file
+  wxString dbpath;
+  dbpath = survey_pi::GetConfigDir() + _T(DATABASE_NAME);
+
+  bool newDB = !wxFileExists(dbpath);
+  b_dbUsable = true;
+
+  void* cache;  // SOLUTION
+
+  ret = sqlite3_open_v2(dbpath.mb_str(), &m_database,
+                        SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+  if (ret != SQLITE_OK) {
+    wxLogMessage(_T("SURVEY_PI: cannot open '%s': %s\n"), DATABASE_NAME,
+                 sqlite3_errmsg(m_database));
+    sqlite3_close(m_database);
+    b_dbUsable = false;
+  }
+
+  sqlite3_enable_load_extension(m_database, 1);
+  sql = "SELECT load_extension('mod_spatialite')";
+
+  ret = sqlite3_exec(m_database, sql.c_str(), nullptr, nullptr, &err_msg);
+  if (ret != SQLITE_OK) {
+    sqlite3_free(err_msg);
+    sqlite3_close(m_database);
+    wxMessageBox(
+        "Error loading the mod_spatialite extension, refer to the manual.");
+    return 0;
+  }
+
+}
+
+
 int survey_pi::Init(void) {
   m_projection = PROJECTION;
   m_activesurvey = 0;
@@ -1865,6 +1948,7 @@ int survey_pi::Init(void) {
           WANTS_OVERLAY_CALLBACK | WANTS_ONPAINT_VIEWPORT |
           WANTS_OPENGL_OVERLAY_CALLBACK | WANTS_CONFIG);
 }
+
 
 bool survey_pi::DeInit(void) {
   RemovePlugInTool(m_leftclick_tool_id);
