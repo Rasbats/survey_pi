@@ -1700,7 +1700,7 @@ int survey_pi::EarlyInit(void) {
     b_dbUsable = false;
   }
 
-  sqlite3_enable_load_extension(m_database, 1);
+ 
   sql = "SELECT load_extension('mod_spatialite')";
 
   ret = sqlite3_exec(m_database, sql.c_str(), nullptr, nullptr, &err_msg);
