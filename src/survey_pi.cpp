@@ -1701,16 +1701,14 @@ int survey_pi::Init(void) {
 
   sqlite3_enable_load_extension(m_database, 1);
 
-  sql = "SELECT load_extension('mod_spatialite', 'sqlite3_modspatialite_init')";
-
-  wxMessageBox(sql);
+  sql = "SELECT load_extension('mod_spatialite')";
  
   ret = sqlite3_exec(m_database, sql.c_str(), nullptr, nullptr, &err_msg);
   if (ret != SQLITE_OK) {
     sqlite3_free(err_msg);
     sqlite3_close(m_database);
     wxMessageBox(
-        "Error loading the mod_spatialite extension, refer to the manual.", sql);
+        "Error loading the mod_spatialite extension, refer to the manual.");
     return 0;
   }
 
