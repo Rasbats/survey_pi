@@ -1700,14 +1700,18 @@ int survey_pi::Init(void) {
   }
 
   sqlite3_enable_load_extension(m_database, 1);
-  sql = "SELECT load_extension('mod_spatialite')";
 
+  #ifdef __WINDOWS__
+  sql = "SELECT load_extension('mod_spatialite')";
+  #else
+  sql = "SELECT load_extension('/usr/lib/x86_64-linux-gnu/mod_spatialite.so.8.1.0')";
+  #endif
   ret = sqlite3_exec(m_database, sql.c_str(), nullptr, nullptr, &err_msg);
   if (ret != SQLITE_OK) {
     sqlite3_free(err_msg);
     sqlite3_close(m_database);
     wxMessageBox(
-        "Error loading the mod_spatialite extension, refer to the manual.");
+        "Error loading the mod_spatialite extension, refer to the manual.", sql);
     return 0;
   }
 
