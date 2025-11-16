@@ -1699,9 +1699,9 @@ int survey_pi::Init(void) {
     b_dbUsable = false;
   }
 
-  //sqlite3_enable_load_extension(m_database, 1);
+  sqlite3_enable_load_extension(m_database, 1);
 
-  sql = "SELECT load_extension('mod_spatialite')";
+  sql = "SELECT load_extension('mod_spatialite', 'sqlite3_modspatialite_init')";
 
   wxMessageBox(sql);
  
