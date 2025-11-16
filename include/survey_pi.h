@@ -103,7 +103,6 @@ public:
     survey_pi(void* ppimgr);
 
     //    The required PlugIn Methods
-    int EarlyInit(void);
     int Init(void);
     bool DeInit(void);
 
