@@ -35,7 +35,7 @@ modules:
       sources:
           - type: git
             url: ..
-            branch: master
+            branch: main
 # diff --git a/flatpak/org.opencpn.OpenCPN.Plugin.shipdriver.yaml b/flatpak/org.opencpn.OpenCPN.Plugin.shipdriver.yaml
 # index 99ff732..d43f757 100644
 # --- a/flatpak/org.opencpn.OpenCPN.Plugin.shipdriver.yaml
