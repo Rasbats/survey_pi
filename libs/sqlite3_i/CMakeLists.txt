@@ -6,7 +6,7 @@
 # Include sqlite3_i header and, on win32, link import lib. 
 # ~~~
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 
 if (TARGET ocpn::sqlite3_i)
   return ()
