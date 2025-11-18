@@ -65,7 +65,7 @@ set(PKG_API_LIB api-18) # A directory in libs/ e. g., api-17 or api-16
 macro (late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers and
   # ocpn::api is available.
-  add_definitions(-D SQLITE_ENABLE_RTREE)
+  # add_definitions(-D SQLITE_ENABLE_RTREE)
 
   # Fix OpenGL deprecated warnings in Xcode
   target_compile_definitions(${PACKAGE_NAME} PRIVATE GL_SILENCE_DEPRECATION)
@@ -92,8 +92,8 @@ macro (add_plugin_libraries)
   add_subdirectory("opencpn-libs/nmea0183")
   target_link_libraries(${PACKAGE_NAME} ocpn::nmea0183)
 
-  add_subdirectory("opencpn-libs/sqlite")
-  target_link_libraries(${PACKAGE_NAME} ocpn::sqlite)
+  #add_subdirectory("opencpn-libs/sqlite")
+  #target_link_libraries(${PACKAGE_NAME} ocpn::sqlite)
 
   add_subdirectory("opencpn-libs/wxsvg")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxsvg)
