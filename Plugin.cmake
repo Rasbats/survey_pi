@@ -13,19 +13,24 @@
 
 set(OCPN_TEST_REPO
     "opencpn/survey-alpha"
-    CACHE STRING "Default repository for untagged builds")
+    CACHE STRING "Default repository for untagged builds"
+)
 set(OCPN_BETA_REPO
     "opencpn/survey-beta"
-    CACHE STRING "Default repository for tagged builds matching 'beta'")
+    CACHE STRING "Default repository for tagged builds matching 'beta'"
+)
 set(OCPN_RELEASE_REPO
     "opencpn/survey-prod"
-    CACHE STRING "Default repository for tagged builds not matching 'beta'")
+    CACHE STRING "Default repository for tagged builds not matching 'beta'"
+)
+
+option(SURVEY_USE_SVG "Use SVG graphics" ON)
 
 #
 # -------  Plugin setup --------
 #
 set(PKG_NAME survey_pi)
-set(PKG_VERSION 4.2.0)
+set(PKG_VERSION 4.0.0)
 set(PKG_PRERELEASE "") # Empty, or a tag like 'beta'
 
 set(DISPLAY_NAME survey) # Dialogs, installer artifacts, ...
@@ -37,65 +42,70 @@ Survey
 ]=]
 )
 
-set(PKG_AUTHOR "Pavel Kalian, Mike Rossiter")
+set(PKG_AUTHOR "Mike Rossiter")
 set(PKG_IS_OPEN_SOURCE "yes")
-set(PKG_HOMEPAGE https://github.com/rasbats/survey_pi)
+set(PKG_HOMEPAGE https://github.com/Rasbats/survey_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/survey.html)
-
-include_directories(${CMAKE_SOURCE_DIR}/include)
-add_definitions(-DocpnUSE_GL)
 
 set(SRC
     src/baro_history.cpp
+    src/baro_history.h
     src/bbox.cpp
+    src/bbox.h
+    src/circle.xpm
+    src/cross.xpm
+    src/dychart.h
     src/icons.cpp
+    src/icons.h
     src/instrument.cpp
+    src/instrument.h
     src/mygridtablebase.cpp
+    src/mygridtablebase.h
     src/ProfileWin.cpp
+    src/ProfileWin.h
     src/soundinggridtable.cpp
+    src/soundinggridtable.h
+    src/square.xpm
     src/surveygui.cpp
+    src/surveygui.h
     src/surveygui_impl.cpp
+    src/surveygui_impl.h
     src/SurveyOverlayFactory.cpp
+    src/SurveyOverlayFactory.h
     src/survey_pi.cpp
-    src/plug_utils.cpp
+    src/survey_pi.h
 )
 
-set(PKG_API_LIB api-18) # A directory in libs/ e. g., api-17 or api-16
+set(PKG_API_LIB api-17) # A directory in libs/ e. g., api-17 or api-16
 
 macro (late_init)
   # Perform initialization after the PACKAGE_NAME library, compilers and
   # ocpn::api is available.
-  # add_definitions(-D SQLITE_ENABLE_RTREE)
+  add_definitions(-D SQLITE_ENABLE_RTREE)
 
-  # Fix OpenGL deprecated warnings in Xcode
-  target_compile_definitions(${PACKAGE_NAME} PRIVATE GL_SILENCE_DEPRECATION)
-
+  if (SURVEY_USE_SVG)
+    target_compile_definitions(${PACKAGE_NAME} PUBLIC SURVEY_USE_SVG)
+  endif ()
 endmacro ()
 
 macro (add_plugin_libraries)
-# Add libraries required by this plugin
-  add_subdirectory("${CMAKE_SOURCE_DIR}/libs/std_filesystem")
-  target_link_libraries(${PACKAGE_NAME} ocpn::filesystem)
-  
-  add_subdirectory("opencpn-libs/plugin_dc")
-  target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
-
-  add_subdirectory("opencpn-libs/tinyxml")
+  # Add libraries required by this plugin
+  add_subdirectory("libs/tinyxml")
   target_link_libraries(${PACKAGE_NAME} ocpn::tinyxml)
 
-  add_subdirectory("opencpn-libs/wxJSON")
+  add_subdirectory("libs/wxJSON")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
 
-  add_subdirectory("opencpn-libs/jsoncpp")
+  add_subdirectory("libs/plugingl")
+  target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)
+
+  add_subdirectory("libs/jsoncpp")
   target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
 
-  add_subdirectory("opencpn-libs/nmea0183")
+  add_subdirectory("libs/nmea0183")
   target_link_libraries(${PACKAGE_NAME} ocpn::nmea0183)
 
-  #add_subdirectory("opencpn-libs/sqlite")
-  #target_link_libraries(${PACKAGE_NAME} ocpn::sqlite)
-
-  add_subdirectory("opencpn-libs/wxsvg")
-  target_link_libraries(${PACKAGE_NAME} ocpn::wxsvg)
+  add_subdirectory("libs/sqlite3_i")
+  target_link_libraries(${PACKAGE_NAME} sqlite3_i::sqlite3_i)
 
 endmacro ()
