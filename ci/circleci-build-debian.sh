@@ -79,7 +79,7 @@ exec > >(tee $builddir/build.log) 2>&1;
 sudo apt -qq update || apt update
 sudo apt-get -qq install devscripts equivs software-properties-common
 sudo apt-get -qq install libsqlite3-dev
-sudo apt-get -qq libsqlite3-mod-spatialite
+sudo apt-get -qq install libsqlite3-mod-spatialite
 
 mk-build-deps --root-cmd=sudo -ir build-deps/control
 rm -f *changes  *buildinfo
