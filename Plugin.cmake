@@ -108,7 +108,7 @@ macro (add_plugin_libraries)
   add_subdirectory("libs/sqlite3_i")
   target_link_libraries(${PACKAGE_NAME} sqlite3_i::sqlite3_i)
 
-  add_subdirectory("libs/sqlite3")
-  target_link_libraries(${PACKAGE_NAME} sqlite3::sqlite3)
+  add_subdirectory("libs/sqlite")
+  target_link_libraries(${PACKAGE_NAME} sqlite::sqlite)
 
 endmacro ()
