@@ -78,3 +78,7 @@ endif ()
 find_package(wxWidgets REQUIRED ${WX_COMPONENTS})
 include(${wxWidgets_USE_FILE})
 target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})
+
+find_package(SQLite3 REQUIRED)
+
+target_link_libraries(${PACKAGE_NAME} PRIVATE SQLite::SQLite3)
