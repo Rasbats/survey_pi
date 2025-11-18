@@ -81,4 +81,4 @@ target_link_libraries(${PACKAGE_NAME} ${wxWidgets_LIBRARIES})
 
 find_package(SQLite3 REQUIRED)
 
-target_link_libraries(${PACKAGE_NAME} PRIVATE SQLite::SQLite3)
+target_include_libraries(${PACKAGE_NAME} PRIVATE SQLite::SQLite3)
