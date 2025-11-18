@@ -98,7 +98,7 @@ macro (add_plugin_libraries)
   add_subdirectory("libs/sqlite3_i")
   target_link_libraries(${PACKAGE_NAME} sqlite3_i::sqlite3_i)  
   
-  add_subdirectory("libs/sqlite")
+  add_subdirectory("opencpn-libs/sqlite")
   target_link_libraries(${PACKAGE_NAME} ocpn::sqlite)
 
 
