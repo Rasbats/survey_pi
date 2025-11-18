@@ -96,8 +96,8 @@ macro (add_plugin_libraries)
   add_subdirectory("opencpn-libs/wxJSON")
   target_link_libraries(${PACKAGE_NAME} ocpn::wxjson)
 
-  add_subdirectory("opencpn-libs/plugingl")
-  target_link_libraries(${PACKAGE_NAME} ocpn::plugingl)
+  add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/plugin_dc")
+  target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
 
   add_subdirectory("opencpn-libs/jsoncpp")
   target_link_libraries(${PACKAGE_NAME} ocpn::jsoncpp)
