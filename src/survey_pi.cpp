@@ -2894,148 +2894,145 @@ void survey_pi::SetNMEASentence(wxString &sentence)
 
 }
 
-void survey_pi::ParseNMEASentence(wxString sentence)
-{
+void survey_pi::ParseNMEASentence(wxString sentence) {
+  wxString m_depth;
+  wxString token[40];
+  wxString s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
+  token[0] = _T("");
 
-	wxString m_depth;
-	wxString token[40];
-	wxString s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
-	token[0] = _T("");
+  wxStringTokenizer tokenizer(sentence, wxT(","));
+  int i = 0;
 
-	wxStringTokenizer tokenizer(sentence, wxT(","));
-	int i = 0;
+  while (tokenizer.HasMoreTokens()) {
+    token[i] = tokenizer.GetNextToken();
+    i++;
+  }
+  if (token[0].Right(3) == _T("GLL")) {
+    b_gotdepth = false;
+    s0 = token[1] + token[2];
+    s1 = token[3] + token[4];
+    mydata.lat = DDMLatToDecimal(s0);
+    mydata.lon = DDMLonToDecimal(s1);
 
-	while (tokenizer.HasMoreTokens())	{
-		token[i] = tokenizer.GetNextToken();
-		i++;
-	}
-	if (token[0].Right(3) == _T("GLL")){
-		b_gotdepth = false;
-		s0 = token[1] + token[2];
-		s1 = token[3] + token[4];
-		mydata.lat = DDMLatToDecimal(s0);
-		mydata.lon = DDMLonToDecimal(s1);
+  } else {
+    if (token[0].Right(3) == _T("ZDA")) {
+      b_gotdepth = false;
+      s0 = token[1];
+      s1 = s0.Mid(0, 2);
+      s2 = s0.Mid(2, 2);
+      s3 = s0.Mid(4, 2);
+      s4 = s1 + _T(":") + s2 + _T(":") + s3;
+      s5 = token[2];
+      s6 = token[3];
+      s7 = token[4];
+      s9 = s7 + _T("-") + s6 + _T("-") + s5 + _T(" ") + s4;
 
-	}
-	else{
-		if (token[0].Right(3) == _T("ZDA")){
-			b_gotdepth = false;
-			s0 = token[1];
-			s1 = s0.Mid(0, 2);
-			s2 = s0.Mid(2, 2);
-			s3 = s0.Mid(4, 2);
-			s4 = s1 + _T(":") + s2 + _T(":") + s3;
-			s5 = token[2];
-			s6 = token[3];
-			s7 = token[4];
-			s9 = s7 + _T("-") + s6 + _T("-") + s5 + _T(" ") + s4;
+      mydata.time = s9;  // _T("$IIZDA,055842,15,09,2012,,*5D");  //
+    } else {
+      if (token[0].Right(3) == _T("RMC")) {
+        //$GPRMC, 110858.989, A, 4549.9135, N, 00612.2671, E, 003.7,
+        // 207.5, 050513, , , A * 60
+        b_gotdepth = false;
 
-			mydata.time = s9;// _T("$IIZDA,055842,15,09,2012,,*5D");  //
-		}
-		else{
-			if (token[0].Right(3) == _T("RMC")){
-				//$GPRMC, 110858.989, A, 4549.9135, N, 00612.2671, E, 003.7, 207.5, 050513, , , A * 60
-				b_gotdepth = false;
+        s10 = token[3] + token[4];
+        s11 = token[5] + token[6];
+        mydata.lat = DDMLatToDecimal(s10);
+        mydata.lon = DDMLonToDecimal(s11);
 
-				s10 = token[3] + token[4];
-				s11 = token[5] + token[6];
-				mydata.lat = DDMLatToDecimal(s10);
-				mydata.lon = DDMLonToDecimal(s11);
+        s10 = token[8];
+        mydata.cog = s10;
 
-				s10 = token[8];
-				mydata.cog = s10;
+        s0 = token[1];
+        s1 = s0.Mid(0, 2);
+        s2 = s0.Mid(2, 2);
+        s3 = s0.Mid(4, 2);
+        s4 = s1 + _T(":") + s2 + _T(":") + s3;
+        s5 = token[9];
+        s6 = s5.Mid(0, 2);
+        s7 = s5.Mid(2, 2);
+        s8 = _T("20") + s5.Mid(4, 2);
 
-				s0 = token[1];
-				s1 = s0.Mid(0, 2);
-				s2 = s0.Mid(2, 2);
-				s3 = s0.Mid(4, 2);
-				s4 = s1 + _T(":") + s2 + _T(":") + s3;
-				s5 = token[9];
-				s6 = s5.Mid(0, 2);
-				s7 = s5.Mid(2, 2);
-				s8 = _T("20") + s5.Mid(4, 2);
+        s9 = s8 + _T("-") + s7 + _T("-") + s6 + _T(" ") + s4;
 
-				s9 = s8 + _T("-") + s7 + _T("-") + s6 + _T(" ") + s4;
+        mydata.time = s9;
+      } else {
+        b_gotdepth = false;
+        if (token[0].Right(3) == _T("DBT")) {
+          // wxMessageBox(sentence);
+          mydata.depth = token[3];
+          b_gotdepth = true;
+        }
+        if (token[0].Right(3) == _T("DPT")) {
+          // wxMessageBox(sentence);
+          mydata.depth = token[1];
+          b_gotdepth = true;
+        }
+      }
+    }
+  }
+  if (b_gotdepth == false) return;
 
-				mydata.time = s9;
-			}
-			else{
-				if (token[0].Right(3) == _T("DBT")){
-					//wxMessageBox(sentence);
-					mydata.depth = token[3];
-					b_gotdepth = true;
-				}
-				else{ return; }
-			}
-		}
+  if (b_gotdepth == true) {
+    if (mydata.lat == _T("999") || mydata.lon == _T("999")) {
+      //	b_gotdepth = false;
+      return;
+    }
 
-	}
+    double value, valuela, valuelo;
+    mydata.depth.ToDouble(&value);
+    double depth2 = value;
+    mydata.lat.ToDouble(&valuela);
+    // wxMessageBox(mydata.lat);
 
-	if (b_gotdepth == true){
+    double m_mlat = valuela;
+    mydata.lon.ToDouble(&valuelo);
+    double m_mlon = valuelo;
 
-		if ( mydata.lat == _T("999") || mydata.lon == _T("999") ){
-		//	b_gotdepth = false;
-			return;
+    wxDateTime dt;
 
-		}
+    // dt = wxDateTime::Now();		// For testing using nmea
+    // without time
 
-		double value, valuela, valuelo;
-		mydata.depth.ToDouble(&value);
-		double depth2 = value;
-		mydata.lat.ToDouble(&valuela);
-		//wxMessageBox(mydata.lat);
+    dt.ParseDateTime(mydata.time);  // When not testing
 
-		double m_mlat = valuela;
-		mydata.lon.ToDouble(&valuelo);
-		double m_mlon = valuelo;
+    time_t t = dt.GetTicks();
+    int64_t i = *((int64_t *)&t);
 
-		wxDateTime dt;
+    char number[24];  // dummy size, you should take care of the size!
+    sprintf(number, "%.2f", depth2);
+    depth2 = atof(number);
+    double brg, dist;
+    double tide;
 
-		//dt = wxDateTime::Now();		// For testing using nmea without time
+    if (m_latprev == 0) {
+      tide = 0;
+      InsertSounding(depth2, m_mlat, m_mlon, tide, t, 3395);
+      m_latprev = m_mlat;
+      m_lonprev = m_mlon;
+      b_gotposn = true;
+      return;
+    }
 
-		dt.ParseDateTime(mydata.time);  // When not testing
+    if (b_gotposn) {
+      DistanceBearingMercator_Plugin(m_latprev, m_lonprev, m_mlat, m_mlon, &brg,
+                                     &dist);
+      wxString str = wxString::Format(wxT("%6.6f"), (double)dist * 1852);
+      // wxMessageBox(str);
 
-		time_t t = dt.GetTicks();
-		int64_t i = *((int64_t*)&t);
+      if (dist * 1852 >= m_fMinDistance) {
+        tide = 0;
+        InsertSounding(depth2, m_mlat, m_mlon, tide, t, 3395);
+        m_pSurveyDialog->soundingCount++;
 
-		char number[24]; // dummy size, you should take care of the size!
-		sprintf(number, "%.2f", depth2);
-		depth2 = atof(number);
-		double brg, dist;
-		double tide;
-
-		if (m_latprev == 0){
-
-			tide = 0;
-			InsertSounding(depth2, m_mlat, m_mlon, tide, t, 3395);
-			m_latprev = m_mlat;
-			m_lonprev = m_mlon;
-			b_gotposn = true;
-			return;
-		}
-
-		if (b_gotposn){
-			DistanceBearingMercator_Plugin(m_latprev, m_lonprev, m_mlat, m_mlon, &brg, &dist);
-			wxString str = wxString::Format(wxT("%6.6f"), (double)dist * 1852);
-			//wxMessageBox(str);
-
-			if (dist * 1852 >= m_fMinDistance){
-				tide = 0;
-				InsertSounding(depth2, m_mlat, m_mlon, tide, t, 3395);
-				m_pSurveyDialog->soundingCount++;
-
-				m_latprev = m_mlat;
-				m_lonprev = m_mlon;
-			}
-			else {
-				b_gotdepth = false;
-				return;
-			}
-		}
-
-	}
-
- }
+        m_latprev = m_mlat;
+        m_lonprev = m_mlon;
+      } else {
+        b_gotdepth = false;
+        return;
+      }
+    }
+  }
+}
 
 void survey_pi::timeToZDA(wxString myGPXTime){
 	wxString s = myGPXTime;
