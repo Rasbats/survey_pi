@@ -102,6 +102,7 @@ void SurveyDlg::OnSurveyRecordToggleNMEA(wxCommandEvent& event)
 		m_btbRecord->SetValue(true);
 		m_btbRecord->SetBitmap(*_img_survey_paused);
 		plugin->m_recording = false;
+    RefreshSurvey();
 		return;
 	}
 
@@ -115,6 +116,7 @@ void SurveyDlg::OnSurveyRecordToggleNMEA(wxCommandEvent& event)
 		m_btbRecord->SetValue(false);
 		m_btbRecord->SetBitmap(*_img_survey);
 		plugin->m_recording = false;
+    RefreshSurvey();
 		return;
 	}
 }
