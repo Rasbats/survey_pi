@@ -24,113 +24,13 @@ flatpak-steps: &flatpak-steps
     - run: ci/git-push.sh /build-flatpak
 
 jobs:
-  build-buster:
-    docker:
-      - image: circleci/buildpack-deps:bullseye-scm
-    environment:
-      - OCPN_TARGET: bullseye
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-buster.sh
-      - run: sh -c "ci/maybe-push-upload.sh"
-
-  build-buster-armhf:
-    machine:
-      image: ubuntu-2004:202101-01
-    resource_class: arm.medium
-    environment:
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-buster-armhf.sh
-      - run: ci/maybe-push-upload.sh
-
-  build-bullseye:
-    docker:
-      - image: circleci/buildpack-deps:bullseye-scm
-    environment:
-      - OCPN_TARGET: bullseye
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    <<: *debian-steps
-
-  build-bullseye-wx32:
-    docker:
-      - image: circleci/buildpack-deps:bullseye-scm
-    environment:
-      - OCPN_TARGET: bullseye
-      - BUILD_WX32: true
-      - TARGET_TUPLE: debian-wx32;11;x86_64
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    <<: *debian-steps
-
-  build-bullseye-armhf:
-    machine:
-      image: ubuntu-2004:202101-01
-    resource_class: arm.medium
-    environment:
-      - TARGET_TUPLE: debian;11;armhf
-      - OCPN_TARGET: bullseye
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-debian-armhf.sh
-      - run: cd build-debian; /bin/bash < upload.sh
-      - run: ci/git-push.sh build-debian
-
-  build-bullseye-wx32-armhf:
-    machine:
-      image: ubuntu-2004:202101-01
-    resource_class: arm.medium
-    environment:
-      - TARGET_TUPLE: debian-wx32;11;armhf
-      - OCPN_TARGET: bullseye
-      - BUILD_WX32: true
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-debian-armhf.sh
-      - run: cd build-debian; /bin/bash < upload.sh
-      - run: ci/git-push.sh build-debian
-
-
-  build-bullseye-arm64:
-    machine:
-      image: ubuntu-2004:2022.04.1
-    resource_class: arm.medium
-    environment:
-      - OCPN_TARGET: bullseye
-      - TARGET_TUPLE: debian;11;arm64
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-debian-docker.sh
-      - run: cd build-debian; /bin/bash < upload.sh
-      - run: ci/git-push.sh build-debian
-
-  build-bullseye-wx32-arm64:
-    machine:
-      image: ubuntu-2004:2022.04.1
-    resource_class: arm.medium
-    environment:
-      - OCPN_TARGET: bullseye
-      - BUILD_WX32: true
-      - TARGET_TUPLE: debian-wx32;11;arm64
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-debian-docker.sh
-      - run: cd build-debian; /bin/bash < upload.sh
-      - run: ci/git-push.sh build-debian
-
-
   build-bookworm:
     machine:
-      image: ubuntu-2004:2022.04.1
+      image: ubuntu-2204:current
     resource_class: medium
     environment:
       - OCPN_TARGET: bookworm
-      - TARGET_TUPLE: debian;12;x86_64
+      - TARGET_TUPLE: debian-x86_64;12;x86_64
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
       - checkout
@@ -140,11 +40,11 @@ jobs:
 
   build-bookworm-arm64:
     machine:
-      image: ubuntu-2004:2022.04.1
+      image: ubuntu-2204:current
     resource_class: arm.medium
     environment:
       - OCPN_TARGET: bookworm
-      - TARGET_TUPLE: debian;12;arm64
+      - TARGET_TUPLE: debian-arm64;12;arm64
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
       - checkout
@@ -152,53 +52,155 @@ jobs:
       - run: cd build-debian; /bin/bash < upload.sh
       - run: ci/git-push.sh build-debian
 
-  build-bookworm-armhf:
+  build-trixie:
     machine:
-      image: ubuntu-2004:202101-01
-    resource_class: arm.medium
+      image: ubuntu-2204:current
+    resource_class: medium
     environment:
-      - TARGET_TUPLE: debian;12;armhf
-      - OCPN_TARGET: bookworm
+      - OCPN_TARGET: trixie
+      - TARGET_TUPLE: debian-x86_64;13;x86_64
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
       - checkout
-      - run: ci/circleci-build-debian-armhf.sh
+      - run: ci/circleci-build-debian-docker.sh
       - run: cd build-debian; /bin/bash < upload.sh
       - run: ci/git-push.sh build-debian
 
-  build-flatpak-arm64:
+  build-trixie-arm64:
     machine:
-      image: ubuntu-2004:202101-01
+      image: ubuntu-2204:current
+    resource_class: arm.medium
+    environment:
+      - OCPN_TARGET: trixie
+      - TARGET_TUPLE: debian-arm64;13;arm64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - checkout
+      - run: ci/circleci-build-debian-docker.sh
+      - run: cd build-debian; /bin/bash < upload.sh
+      - run: ci/git-push.sh build-debian
+
+  build-forky-amd64:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: medium
+    environment:
+      - OCPN_TARGET: forky
+      - TARGET_TUPLE: debian-x86_64;14;x86_64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - checkout
+      - run: ci/circleci-build-debian-docker.sh
+      - run: cd build-debian; /bin/bash < upload.sh
+      - run: ci/git-push.sh build-debian
+
+  build-forky-arm64:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: arm.medium
+    environment:
+      - OCPN_TARGET: forky
+      - TARGET_TUPLE: debian-arm64;14;arm64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+    steps:
+      - checkout
+      - run: ci/circleci-build-debian-docker.sh
+      - run: cd build-debian; /bin/bash < upload.sh
+      - run: ci/git-push.sh build-debian
+
+  build-flatpak-arm64-2408:
+    machine:
+      image: ubuntu-2204:current
     resource_class: arm.medium
     environment:
       - OCPN_TARGET: flatpak-arm64
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2408
     parameters:
       cache-key:
         type: string
         # Update the last part, here v2, to invalidate cache
-        default: "fp-arm20-v2"
+        default: "fp-arm24-v2"
     <<: *flatpak-steps
 
-  build-flatpak-x86:
+  build-flatpak-arm64-2508:
     machine:
-      image: ubuntu-2004:202010-01
+      image: ubuntu-2204:current
+    resource_class: arm.medium
+    environment:
+      - OCPN_TARGET: flatpak-arm64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2508
+    parameters:
+      cache-key:
+        type: string
+        # Update the last part, here v2, to invalidate cache
+        default: "fp-arm25-v2"
+    <<: *flatpak-steps
+
+  build-flatpak-x86-2408:
+    machine:
+      image: ubuntu-2204:current
     environment:
       - OCPN_TARGET: flatpak
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2408
     parameters:
       cache-key:
         type: string
         # Update the last part, here v2, to invalidate cache
-        default: "fp-x86-20-v2"
+        default: "fp-x86-24-v2"
+    <<: *flatpak-steps
+  build-flatpak-x86-2508:
+    machine:
+      image: ubuntu-2204:current
+    environment:
+      - OCPN_TARGET: flatpak
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2508
+    parameters:
+      cache-key:
+        type: string
+        # Update the last part, here v2, to invalidate cache
+        default: "fp-x86-25-v2"
     <<: *flatpak-steps
 
-  build-macos:
+  build-flatpak-arm64-2608:
+    machine:
+      image: ubuntu-2404:current
+    resource_class: arm.medium
+    environment:
+      - OCPN_TARGET: flatpak-arm64
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2608
+    parameters:
+      cache-key:
+        type: string
+        # Update the last part, here v1, to invalidate cache
+        default: "fp-arm26-v1"
+    <<: *flatpak-steps
+
+  build-flatpak-x86-2608:
+    machine:
+      image: ubuntu-2404:current
+    environment:
+      - OCPN_TARGET: flatpak
+      - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - BRANCH: 2608
+    parameters:
+      cache-key:
+        type: string
+        # Update the last part, here v1, to invalidate cache
+        default: "fp-x86-26-v1"
+    <<: *flatpak-steps
+
+  build-macos-universal:
     macos:
-      xcode: "12.5.1"
+      xcode: "15.4.0"
     environment:
       - OCPN_TARGET: macos
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
+      - OSX_ARCHITECTURES: arm64;x86_64
     steps:
       - checkout
       - run: sudo chmod go+w /usr/local
@@ -219,23 +221,11 @@ jobs:
       - run: cd build-osx; /bin/bash < upload.sh
       - run: ci/git-push.sh  build-osx
 
-
   build-android-arm64:
     docker:
-      - image: circleci/android:api-28-ndk
+      - image: cimg/android:2023.08-ndk
     environment:
       - OCPN_TARGET: android-aarch64
-      - CMAKE_BUILD_PARALLEL_LEVEL: 2
-    steps:
-      - checkout
-      - run: ci/circleci-build-android.sh
-      - run: ci/maybe-push-upload.sh
-
-  build-android-armhf:
-    docker:
-      - image: circleci/android:api-28-ndk
-    environment:
-      - OCPN_TARGET: android-armhf
       - CMAKE_BUILD_PARALLEL_LEVEL: 2
     steps:
       - checkout
@@ -250,54 +240,48 @@ std-filters: &std-filters
         - /tmp-.*/
 
 workflows:
-  version: 2
+  version: 2.1
   build_all:
     jobs:
 
-      - build-flatpak-arm64:
+      - build-flatpak-arm64-2408:
           <<: *std-filters
 
-      - build-flatpak-x86:
+      - build-flatpak-x86-2408:
           <<: *std-filters
 
-      - build-macos:
+      - build-flatpak-arm64-2508:
           <<: *std-filters
 
-      #- build-android-arm64:
-      #    <<: *std-filters
-
-      #- build-android-armhf:
-      #    <<: *std-filters
-
-      - build-bullseye-wx32:
+      - build-flatpak-x86-2508:
           <<: *std-filters
 
-      - build-bullseye-wx32-arm64:
+      - build-flatpak-arm64-2608:
           <<: *std-filters
 
-      - build-bullseye-wx32-armhf:
+      - build-flatpak-x86-2608:
           <<: *std-filters
 
-      - build-bullseye:
+      - build-macos-universal:
           <<: *std-filters
 
-      - build-bullseye-armhf:
-          <<: *std-filters
-
-      - build-bullseye-arm64:
+      - build-android-arm64:
           <<: *std-filters
 
       - build-bookworm-arm64:
           <<: *std-filters
 
-      - build-bookworm-armhf:
-          <<: *std-filters
-
       - build-bookworm:
           <<: *std-filters
 
-      - build-buster:
+      - build-trixie:
           <<: *std-filters
 
-      - build-buster-armhf:
+      - build-trixie-arm64:
+          <<: *std-filters
+
+      - build-forky-amd64:
+          <<: *std-filters
+
+      - build-forky-arm64:
           <<: *std-filters

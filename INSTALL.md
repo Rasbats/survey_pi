@@ -59,21 +59,18 @@ neither required nor convenient and can be excluded. However, doing it
 represents a tested baseline.
 
 Actual builds can (i. e., should) be performed without administrative
-privileges by running 
+privileges by running
 
     > ..\ci\appveyor.bat
 
-#### Building for Buster (Debian 9)
 
-The Buster builds are targeting Ubuntu Bionic besides Debian Buster. These
-are kept in a legacy state, the basic idea is that buster builds in the
-catalog should not be updated except in case of serious bug fixes.
+#### Disabling Android builds
 
-Plugins could either disable buster builds completely, always run them or
+Plugins could either disable android builds completely, always run them or
 just run them for example every tenth build. This is configured in the file
 _build-conf.rc_, see comments in this file for details.
 
-By default, these builds runs every tenth build without uploading anything.
+By default, these builds are enabled
 
 #### Building for MacOS
 
