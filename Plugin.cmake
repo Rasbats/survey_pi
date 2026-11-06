@@ -12,13 +12,13 @@
 # -------- Options ----------
 
 set(OCPN_TEST_REPO
-    "nohal/opencpn-plugins"
+    "Rasbats/opencpn-plugins"
     CACHE STRING "Default repository for untagged builds")
 set(OCPN_BETA_REPO
-    "nohal/survey_pi-beta"
+    "Rasbats/survey_pi-beta"
     CACHE STRING "Default repository for tagged builds matching 'beta'")
 set(OCPN_RELEASE_REPO
-    "nohal/survey_pi-stable"
+    "Rasbats/survey_pi-stable"
     CACHE STRING "Default repository for tagged builds not matching 'beta'")
 
 
@@ -43,7 +43,7 @@ Survey
 
 set(PKG_AUTHOR "Pavel Kalian, Mike Rossiter")
 set(PKG_IS_OPEN_SOURCE "yes")
-set(PKG_HOMEPAGE https://github.com/nohal/survey_pi)
+set(PKG_HOMEPAGE https://github.com/Rasbats/survey_pi)
 set(PKG_INFO_URL https://opencpn.org/OpenCPN/plugins/survey.html)
 
 include_directories(${CMAKE_SOURCE_DIR}/include)
@@ -90,10 +90,7 @@ endmacro ()
 
 macro (add_plugin_libraries)
   # Add libraries required by this plugin
-  if(WIN32)
-    add_subdirectory("${CMAKE_SOURCE_DIR}/opencpn-libs/WindowsHeaders")
-    target_link_libraries(${PACKAGE_NAME} windows::headers)
-  endif()
+  
   add_subdirectory("opencpn-libs/plugin_dc")
   target_link_libraries(${PACKAGE_NAME} ocpn::plugin-dc)
 

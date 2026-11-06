@@ -57,9 +57,11 @@
 
 // #include "SurveyOverlayFactory.h"
 
-#define FEET 0
+#define PI 3.1412
 #define METERS 1
-#define FATHOMS 2
+#define FEET 2
+#define FATHOMS 3
+
 
 // World Mercator
 #define PROJECTION 3395

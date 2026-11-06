@@ -48,6 +48,7 @@
 #include "tinyxml.h"
 
 class soundingdata;
+class NMEA0183;
 
 #include <vector>
 
