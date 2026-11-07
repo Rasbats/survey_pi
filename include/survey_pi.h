@@ -38,6 +38,7 @@
 
 #include "circle.xpm"
 #include "cross.xpm"
+#include <cstdint> 
 #include "ocpn_plugin.h"
 #include "square.xpm"
 #include "tinyxml.h"
