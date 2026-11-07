@@ -141,7 +141,7 @@ void SurveyDlg::RecordNMEA(wxCommandEvent& event)
         plugin->m_recording = false;
         plugin->FillSurveyGrid();
         plugin->FillSurveyInfo();
-        // RequestRefresh(plugin->m_pSurveyDialog->m_parent);
+        RequestRefresh(plugin->m_pSurveyDialog->m_parent);
     }
 
     /*
@@ -287,7 +287,7 @@ void SurveyDlg::RefreshSurvey()
         plugin->FillSurveyInfo();
         plugin->FillSurveyGrid();
     }
-
+    RequestRefresh(plugin->m_pSurveyDialog->m_parent);
     RequestRefresh(m_parent);
 }
 
