@@ -12,13 +12,13 @@
 # -------- Options ----------
 
 set(OCPN_TEST_REPO
-    "Rasbats/opencpn-plugins"
+    "opencpn/survey-alpha"
     CACHE STRING "Default repository for untagged builds")
 set(OCPN_BETA_REPO
-    "Rasbats/survey_pi-beta"
+    "opencpn/survey-beta"
     CACHE STRING "Default repository for tagged builds matching 'beta'")
 set(OCPN_RELEASE_REPO
-    "Rasbats/survey_pi-stable"
+    "opencpn/survey-stable"
     CACHE STRING "Default repository for tagged builds not matching 'beta'")
 
 
