@@ -41,7 +41,7 @@ public:
     void Reset();
 
     void Translate(wxPoint2DDouble&);
-    void MapBbox(const wxAffineMatrix2D& matrix);
+    void MapBbox(const wxTransformMatrix& matrix);
 
     double GetWidth() { return m_maxx - m_minx; };
     double GetHeight() { return m_maxy - m_miny; };
