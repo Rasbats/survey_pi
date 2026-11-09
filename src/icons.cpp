@@ -15,6 +15,7 @@ wxBitmap* _img_minus;
 wxBitmap* _img_plus;
 
 #ifdef SURVEY_USE_SVG
+#include <cstdint>
 #include "ocpn_plugin.h"
 wxString _svg_survey;
 wxString _svg_survey_toggled;
