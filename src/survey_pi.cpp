@@ -132,7 +132,7 @@ static wxBitmap load_plugin(const char* icon_name, const char* api_name)
 }
 
 survey_pi::survey_pi(void* ppimgr)
-    : opencpn_plugin_118(ppimgr)
+    : opencpn_plugin_120(ppimgr)
 {
     // Create the PlugIn icons
     initialize_images();

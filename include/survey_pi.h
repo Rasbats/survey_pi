@@ -101,7 +101,7 @@ public:
 
 #define SURVEY_TOOL_POSITION -1 // Request default positioning of toolbar tool
 
-class survey_pi : public opencpn_plugin_118 {
+class survey_pi : public opencpn_plugin_120 {
 public:
     survey_pi(void* ppimgr);
 
