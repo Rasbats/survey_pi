@@ -8,6 +8,7 @@
 
 #include "wx/geometry.h"
 #include "wx/matrix.h"
+#include <wx/affinematrix2d.h>
 
 enum OVERLAP { _IN, _ON, _OUT };
 
@@ -41,7 +42,7 @@ public:
     void Reset();
 
     void Translate(wxPoint2DDouble&);
-    void MapBbox(const wxTransformMatrix& matrix);
+    void MapBbox(const wxAffineMatrix2D& matrix);
 
     double GetWidth() { return m_maxx - m_minx; };
     double GetHeight() { return m_maxy - m_miny; };

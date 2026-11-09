@@ -288,16 +288,19 @@ wxBoundingBox& wxBoundingBox::operator=(const wxBoundingBox& other)
     return *this;
 }
 
-void wxBoundingBox::MapBbox(const wxTransformMatrix& matrix)
+void wxBoundingBox::MapBbox(const wxAffineMatrix2D& matrix)
 {
-    assert(m_validbbox == TRUE);
+    assert(m_validbbox == TRUE);    
 
-    double x1, y1, x2, y2, x3, y3, x4, y4;
+    wxPoint2DDouble p1 = matrix.TransformPoint(wxPoint2DDouble(m_minx, m_miny));
+    wxPoint2DDouble p2 = matrix.TransformPoint(wxPoint2DDouble(m_minx, m_maxy));
+    wxPoint2DDouble p3 = matrix.TransformPoint(wxPoint2DDouble(m_maxx, m_maxy));
+    wxPoint2DDouble p4 = matrix.TransformPoint(wxPoint2DDouble(m_maxx, m_miny));
 
-    matrix.TransformPoint(m_minx, m_miny, x1, y1);
-    matrix.TransformPoint(m_minx, m_maxy, x2, y2);
-    matrix.TransformPoint(m_maxx, m_maxy, x3, y3);
-    matrix.TransformPoint(m_maxx, m_miny, x4, y4);
+    double x1 = p1.m_x, y1 = p1.m_y;
+    double x2 = p2.m_x, y2 = p2.m_y;
+    double x3 = p3.m_x, y3 = p3.m_y;
+    double x4 = p4.m_x, y4 = p4.m_y;
 
     double xmin = wxMin(x1, x2);
     xmin = wxMin(xmin, x3);
