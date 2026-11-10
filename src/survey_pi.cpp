@@ -3248,7 +3248,7 @@ wxString survey_pi::StandardPath()
     if (!wxDirExists(stdPath))
         wxMkdir(stdPath);
 
-    stdPath += s + "survey";
+    stdPath += s + "survey_pi";
 
 #ifdef __WXOSX__
     // Compatibility with pre-OCPN-4.2; move config dir to
